@@ -21,24 +21,53 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
+//1
     $search = $conn->prepare("SELECT username FROM user");
     $search->execute();
 
-    echo "<pre>";
+    echo "1<pre>";
     print_r($search->fetchAll());
     echo "</pre>";
 
+//2
     $search = $conn->prepare("SELECT titre FROM article");
     $search->execute();
 
-    echo "<pre>";
+    echo "2<pre>";
     print_r($search->fetchAll());
     echo "</pre>";
 
-    $search = $conn->prepare("SELECT * FROM article WHERE titre LIKE ('%poterie%')");
+//3
+    $search = $conn->prepare("
+        SELECT username FROM user
+            WHERE id = ANY (SELECT user_fk FROM article WHERE titre LIKE '%poterie%')
+    ");
     $search->execute();
 
-    echo "<pre>";
+    echo "3<pre>";
+    print_r($search->fetchAll());
+    echo "</pre>";
+
+//4
+//    $search = $conn->prepare("
+//        SELECT username FROM user
+//        INNER JOIN article ON
+//    ");
+//    $search->execute();
+//
+//    echo "4<pre>";
+//    print_r($search->fetchAll());
+//    echo "</pre>";
+
+//5
+    $search = $conn->prepare("
+        SELECT username FROM user
+        INNER JOIN article ON article.user_fk = user.id
+        WHERE username LIKE ('jane%')
+    ");
+    $search->execute();
+
+    echo "5<pre>";
     print_r($search->fetchAll());
     echo "</pre>";
 
