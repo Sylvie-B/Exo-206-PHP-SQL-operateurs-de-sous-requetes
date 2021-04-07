@@ -49,21 +49,13 @@ try {
     echo "</pre>";
 
 //4
-//    $search = $conn->prepare("
-//        SELECT username FROM user
-//        INNER JOIN article ON
-//    ");
-//    $search->execute();
-//
-//    echo "4<pre>";
-//    print_r($search->fetchAll());
-//    echo "</pre>";
+
 
 //5
     $search = $conn->prepare("
         SELECT username FROM user
-        INNER JOIN article ON article.user_fk = user.id
-        WHERE username LIKE ('jane%')
+            WHERE EXISTS (SELECT * FROM article INNER JOIN user ON user.id = article.user_fk
+                WHERE username LIKE '%jane%')
     ");
     $search->execute();
 
